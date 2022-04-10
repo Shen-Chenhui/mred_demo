@@ -1,0 +1,29 @@
+# 加密
+seal code -c mred_demo/conf/algo.conf -u 271055 --task_name=private-toolkit-step-code-6080061 --uuid=35861fb3-f1fb-454b-9c41-3e14b142bc28
+
+seal code -u 271055 -c mred_demo/conf/algo.conf
+seal model  -u 271055 -c mred_demo/conf/algo.conf
+
+# 镜像测试是否可以
+seal release -u 271055 -c mred_demo/conf/algo.conf -t code_serving
+
+#需要权限上传
+https://docker.alibaba-inc.com/
+
+## 运行初始化
+docker run -it  --name=mred_demo --net=host reg.docker.alibaba-inc.com/chenhuishen/mred_demo:1.0.0 /bin/bash
+
+## 新窗口
+docker exec -it mred_demo /bin/bash
+
+# 测试
+nohup sh image_run.sh &
+tail -f ../logs/sap_server_error.log
+# 在新窗口发数据
+weg --post-data <file_name> localhost:15002/bin/search
+curl -d @<file_name> localhost:15002/bin/search
+
+
+
+# 保存镜像
+docker save -o mred_demo_encrypted.tar reg.docker.alibaba-inc.com/chenhuishen/mred_demo:1.0.0
