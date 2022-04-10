@@ -289,11 +289,17 @@ def generate_beam_search(
 
 class predict_mred(object):
 
-    def init(self):
+    def init(self, model_dir="./model"):
+        gpu_avail = torch.cuda.is_available()
+        if gpu_avail:
+            device = torch.device('cuda')
+        else:
+            device = torch.device("cpu")
+        print("using device:", device)
         print('==================init start=====================')
         # load model
         model_dir = "./model"
-        self.lm = AutoModelForSeq2SeqLM.from_pretrained(model_dir, return_dict_in_generate=False)
+        self.lm = AutoModelForSeq2SeqLM.from_pretrained(model_dir, return_dict_in_generate=False).to(device)
         self.tokenizer = AutoTokenizer.from_pretrained(model_dir, use_fast=True)
 
         # 文件修改
